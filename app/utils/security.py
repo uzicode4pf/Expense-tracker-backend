@@ -1,6 +1,6 @@
 
 import bcrypt
-bcrypt._about_ = type("about", (), {"_version": bcrypt.version_})
+bcrypt.__about__ = type("about", (), {"__version__": bcrypt.__version__})
 
 from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
