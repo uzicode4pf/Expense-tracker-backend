@@ -1,3 +1,7 @@
+
+import bcrypt
+bcrypt._about_ = type("about", (), {"_version": bcrypt.version_})
+
 from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -5,7 +9,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from app.database.connection import get_db 
-from app.models.user import User  # your user model
+from app.models.user import User
 import os
 
 # Environment variables or defaults
@@ -34,7 +38,7 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# ✅ Token validator and current user retriever
+#  Token validator and current user retriever
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -50,7 +54,6 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     except JWTError:
         raise credentials_exception
 
-    # Fetch user from database
     user = db.query(User).filter(User.id == user_id).first()
     if user is None:
         raise credentials_exception
