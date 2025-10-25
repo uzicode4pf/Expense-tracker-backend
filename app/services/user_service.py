@@ -15,14 +15,15 @@ def create_user(name: str, email: str, username: str, password: str):
         db.close()
         return None, "User with this email or username already exists"
 
-    hashed_password = get_password_hash(password)
+    
+    hashed_password = get_password_hash(str(password))
     user_id = str(uuid.uuid4())
 
+    
     new_user = User(
         id=user_id,
-        name=name,
-        email=email,
         username=username,
+        email=email,
         hashed_password=hashed_password,
         has_seen_onboarding=False
     )
@@ -32,7 +33,8 @@ def create_user(name: str, email: str, username: str, password: str):
     db.refresh(new_user)
     db.close()
 
-    token = create_access_token({"user_id": user_id})
+    
+    token = create_access_token({"sub": user_id})
     return new_user, token
 
 
