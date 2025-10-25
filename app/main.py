@@ -20,9 +20,9 @@ app = FastAPI(
 
 # CORS configuration
 origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://trackraid.onrender.com",
+   "https://trackraid.onrender.com",  # live frontend
+    "http://localhost:5173",           # Vite local dev
+    "http://127.0.0.1:5173",
 ]
 
 app.add_middleware(
