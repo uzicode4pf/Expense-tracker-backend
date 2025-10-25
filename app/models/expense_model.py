@@ -11,14 +11,11 @@ class Expense(Base):
     title = Column(String, nullable=False)
     amount = Column(Float, nullable=False)
     type = Column(String, nullable=False)  # "income" or "expense"
-    category = Column(String, nullable=False)  # every expense should have a category
+    category = Column(String, nullable=False)
     description = Column(String, nullable=True)
     date = Column(DateTime(timezone=True), server_default=func.now())
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    # Relationship to User
+    # ✅ Relationship to User
     user = relationship("User", back_populates="expenses")
-
-    # Link the user to their expenses
-    expenses = relationship("Expense", back_populates="user")
