@@ -8,7 +8,7 @@ from app.models.user import User
 from app.utils.security import get_current_user
 
 router = APIRouter(
-    prefix="/api/summary",
+    prefix="",
     tags=["summary"]
 )
 

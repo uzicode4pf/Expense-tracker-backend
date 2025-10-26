@@ -6,7 +6,7 @@ from app.schemas.income_schema import IncomeCreate, IncomeResponse
 import uuid
 from datetime import datetime
 
-router = APIRouter(prefix="/api/income", tags=["Income"])
+router = APIRouter(prefix="", tags=["Income"])
 
 # CREATE
 @router.post("/{user_id}", response_model=IncomeResponse)

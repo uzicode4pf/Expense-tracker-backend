@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.models.user import User
 
 router = APIRouter(
-    prefix="/api/users",
+    prefix="",
     tags=["data_management"]
 )
 

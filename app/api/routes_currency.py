@@ -6,7 +6,7 @@ from app.database.connection import get_db
 from app.utils.security import get_current_user
 
 router = APIRouter(
-    prefix="/api/users",
+    prefix="",
     tags=["currency"]
 )
 

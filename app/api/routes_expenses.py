@@ -7,7 +7,7 @@ from app.schemas.expense_schema import ExpenseCreate, ExpenseResponse
 from app.utils.security import get_current_user
 
 router = APIRouter(
-    prefix="/api/expenses",
+    prefix="",
     tags=["Expenses"]
 )
 

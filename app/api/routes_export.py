@@ -7,7 +7,7 @@ from app.database.connection import get_db
 from sqlalchemy.orm import Session
 
 router = APIRouter(
-    prefix="/api/export",
+    prefix="",
     tags=["export"]
 )
 
