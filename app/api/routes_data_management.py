@@ -11,7 +11,7 @@ router = APIRouter(
     tags=["data_management"]
 )
 
-@router.delete("/data")
+@router.delete("/")
 def delete_all_data(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     db.query(Expense).filter(Expense.user_id == current_user.id).delete()
     db.commit()
