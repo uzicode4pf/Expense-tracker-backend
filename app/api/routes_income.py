@@ -1,16 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.database.connection import get_db
-from app.models.income import Income
-from app.schemas.income_schema import IncomeCreate, IncomeResponse
-from app.utils.security import get_current_user
-from app.models.user import User
-import uuid
 from datetime import datetime
+import uuid
 from typing import List
 
+from app.database.connection import get_db
+from app.models.income import Income
+from app.models.user import User
+from app.schemas.income_schema import IncomeCreate, IncomeResponse, IncomeData
+from app.utils.security import get_current_user
+
+
 router = APIRouter(
-    prefix="/api/income",
+    prefix="",
     tags=["Income"]
 )
 
@@ -36,13 +38,13 @@ def create_income(
     return IncomeResponse(
         success=True,
         message="Income added successfully",
-        data=new_income
+        data=IncomeData.model_validate(new_income)
     )
 
 
 # READ all income records for logged-in user
 @router.get("/", response_model=IncomeResponse)
-def get_income(
+def get_incomes(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -53,7 +55,7 @@ def get_income(
     return IncomeResponse(
         success=True,
         message="Incomes fetched successfully",
-        data=incomes
+        data=[IncomeData.model_validate(i) for i in incomes]
     )
 
 
