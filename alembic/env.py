@@ -15,7 +15,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 from app.database.connection import Base  # import your Base
-from app.models import user, expense_model  # import models to register tables
+from app.models import user, expense_model, income  # import models to register tables
 
 target_metadata = Base.metadata
 
