@@ -41,7 +41,7 @@ app.include_router(routes_summary.router, prefix="/api/summary", tags=["Summary"
 app.include_router(routes_export.router, prefix="/api/export", tags=["Export"])
 app.include_router(routes_latest_transaction.router, prefix="/api/latest", tags=["Latest Transactions"])
 app.include_router(routes_currency.router, prefix="/api/currency", tags=["Currency"])
-app.include_router(routes_data_management.router, prefix="/api/data", tags=["Data Management"])
+app.include_router(routes_data_management.router, prefix="/api/data/clear", tags=["Data Management"])
 app.include_router(routes_income.router, prefix="/api/income", tags=["Income"])
 
 @app.get("/", tags=["Root"])

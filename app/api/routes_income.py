@@ -1,19 +1,29 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.models.income import Income
 from app.schemas.income_schema import IncomeCreate, IncomeResponse
+from app.utils.security import get_current_user
+from app.models.user import User
 import uuid
 from datetime import datetime
+from typing import List
 
-router = APIRouter(prefix="", tags=["Income"])
+router = APIRouter(
+    prefix="/api/income",
+    tags=["Income"]
+)
 
-# CREATE
-@router.post("/{user_id}", response_model=IncomeResponse)
-def create_income(user_id: str, income: IncomeCreate, db: Session = Depends(get_db)):
+# CREATE income record
+@router.post("/", response_model=IncomeResponse)
+def create_income(
+    income: IncomeCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     new_income = Income(
         id=str(uuid.uuid4()),
-        user_id=user_id,
+        user_id=current_user.id,
         amount=income.amount,
         source=income.source,
         description=income.description,
@@ -22,25 +32,50 @@ def create_income(user_id: str, income: IncomeCreate, db: Session = Depends(get_
     db.add(new_income)
     db.commit()
     db.refresh(new_income)
-    return IncomeResponse(success=True, message="Income added successfully", data=new_income)
 
-# READ
-@router.get("/{user_id}", response_model=IncomeResponse)
-def get_income(user_id: str, db: Session = Depends(get_db)):
-    incomes = db.query(Income).filter(Income.user_id == user_id).all()
+    return IncomeResponse(
+        success=True,
+        message="Income added successfully",
+        data=new_income
+    )
+
+
+# READ all income records for logged-in user
+@router.get("/", response_model=IncomeResponse)
+def get_income(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    incomes = db.query(Income).filter(Income.user_id == current_user.id).all()
     if not incomes:
         raise HTTPException(status_code=404, detail="No income records found")
-    return IncomeResponse(success=True, message="Incomes fetched successfully", data=incomes)
 
-# DELETE
-@router.delete("/{user_id}/{income_id}", response_model=IncomeResponse)
-def delete_income(user_id: str, income_id: str, db: Session = Depends(get_db)):
+    return IncomeResponse(
+        success=True,
+        message="Incomes fetched successfully",
+        data=incomes
+    )
+
+
+#  DELETE a specific income record by ID
+@router.delete("/{income_id}", response_model=IncomeResponse)
+def delete_income(
+    income_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     income = db.query(Income).filter(
-        Income.id == income_id, Income.user_id == user_id
+        Income.id == income_id,
+        Income.user_id == current_user.id
     ).first()
+
     if not income:
         raise HTTPException(status_code=404, detail="Income not found")
 
     db.delete(income)
     db.commit()
-    return IncomeResponse(success=True, message="Income deleted successfully")
+
+    return IncomeResponse(
+        success=True,
+        message=f"Income record '{income.source}' deleted successfully"
+    )
